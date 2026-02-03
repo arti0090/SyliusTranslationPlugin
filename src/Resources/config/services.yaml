@@ -1,0 +1,37 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # Controllers
+    Locastic\SyliusTranslationPlugin\Controller\Admin\ClearCacheAction:
+        tags: ['controller.service_arguments']
+
+    Locastic\SyliusTranslationPlugin\Controller\Admin\IndexTranslationAction:
+        tags: ['controller.service_arguments']
+
+    # Factories
+    Locastic\SymfonyTranslationBundle\Factory\TranslationMigrationFactory:
+        class: Locastic\SyliusTranslationPlugin\Factory\TranslationMigrationFactory
+        arguments:
+            - '%locastic_sylius_translation.model.translation_migration.class%'
+
+    # Providers
+    Locastic\SymfonyTranslationBundle\Provider\ThemesProvider:
+        class: Locastic\SyliusTranslationPlugin\Provider\ThemesProvider
+
+    # New aliases
+    Locastic\SymfonyTranslationBundle\Provider\ThemesProviderInterface: '@Locastic\SymfonyTranslationBundle\Provider\ThemesProvider'
+    Locastic\SyliusTranslationPlugin\Provider\ThemesProvider: '@Locastic\SymfonyTranslationBundle\Provider\ThemesProvider'
+
+    Locastic\SyliusTranslationPlugin\Provider\TranslationFilePathProvider:
+        decorates: Locastic\SymfonyTranslationBundle\Provider\TranslationFilePathProvider
+
+    # MenuBuilder
+    Locastic\SyliusTranslationPlugin\MenuBuilder\AdminMenuListener:
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addTranslationMenuItem }
+
+    # Twig Extensions
+    Locastic\SyliusTranslationPlugin\Twig\ThemeExtension:
+        tags: ['twig.extension']
