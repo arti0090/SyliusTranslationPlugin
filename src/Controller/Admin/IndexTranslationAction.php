@@ -12,22 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
-final class IndexTranslationAction
+final readonly class IndexTranslationAction
 {
-    private SearchTranslationsUtilsInterface $searchTranslationsUtils;
-
-    private Environment $twig;
-
-    private FormFactoryInterface $formFactory;
-
     public function __construct(
-        SearchTranslationsUtilsInterface $searchTranslationsUtils,
-        Environment $twig,
-        FormFactoryInterface $formFactory
+        private SearchTranslationsUtilsInterface $searchTranslationsUtils,
+        private Environment $twig,
+        private FormFactoryInterface $formFactory,
     ) {
-        $this->searchTranslationsUtils = $searchTranslationsUtils;
-        $this->twig = $twig;
-        $this->formFactory = $formFactory;
     }
 
     public function __invoke(Request $request): Response

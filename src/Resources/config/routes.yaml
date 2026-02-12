@@ -1,0 +1,8 @@
+locastic_sylius_translations_admin_paths:
+    prefix: "%sylius.security.admin_regex%/translations"
+    resource: 'routes/translations.yaml'
+
+locastic_sylius_translations_admin_clear_cache:
+    path: "%sylius.security.admin_regex%/clear-cache"
+    methods: [ GET ]
+    controller: Locastic\SyliusTranslationPlugin\Controller\Admin\ClearCacheAction

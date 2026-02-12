@@ -8,28 +8,23 @@ use Locastic\SymfonyTranslationBundle\Model\TranslationValueInterface;
 use Locastic\SymfonyTranslationBundle\Provider\DefaultTranslationDirectoryProviderInterface;
 use Locastic\SymfonyTranslationBundle\Provider\ThemesProviderInterface;
 use Locastic\SymfonyTranslationBundle\Provider\TranslationFilePathProviderInterface;
+use Webmozart\Assert\Assert;
 
-final class TranslationFilePathProvider implements TranslationFilePathProviderInterface
+final readonly class TranslationFilePathProvider implements TranslationFilePathProviderInterface
 {
-    private TranslationFilePathProviderInterface $decoratedTranslationFilePathProvider;
-
-    private ThemesProviderInterface $themesProvider;
-
-    private DefaultTranslationDirectoryProviderInterface $defaultTranslationDirectoryProvider;
-
     public function __construct(
-        TranslationFilePathProviderInterface $decoratedTranslationFilePathProvider,
-        ThemesProviderInterface $themesProvider,
-        DefaultTranslationDirectoryProviderInterface $defaultTranslationDirectoryProvider
+        private TranslationFilePathProviderInterface $decoratedTranslationFilePathProvider,
+        private ThemesProviderInterface $themesProvider,
+        private DefaultTranslationDirectoryProviderInterface $defaultTranslationDirectoryProvider,
     ) {
-        $this->decoratedTranslationFilePathProvider = $decoratedTranslationFilePathProvider;
-        $this->themesProvider = $themesProvider;
-        $this->defaultTranslationDirectoryProvider = $defaultTranslationDirectoryProvider;
     }
 
     public function getFilePath(TranslationValueInterface $translationValue): string
     {
-        $theme = $this->themesProvider->findOneByName($translationValue->getTheme());
+        $themeName = $translationValue->getTheme();
+        Assert::notNull($themeName);
+
+        $theme = $this->themesProvider->findOneByName($themeName);
         if (null === $theme || ThemesProviderInterface::NAME_DEFAULT === $theme->getName()) {
             return $this->defaultTranslationDirectoryProvider->getDefaultDirectory();
         }
@@ -39,6 +34,7 @@ final class TranslationFilePathProvider implements TranslationFilePathProviderIn
 
     public function getDefaultDirectory(): string
     {
+        /* @phpstan-ignore-next-line */
         return $this->decoratedTranslationFilePathProvider->getDefaultDirectory();
     }
 }

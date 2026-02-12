@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Locastic\SyliusTranslationPlugin\Provider;
 
@@ -10,33 +10,23 @@ use Locastic\SymfonyTranslationBundle\Provider\ThemesProviderInterface;
 use Sylius\Bundle\ThemeBundle\Factory\ThemeFactoryInterface as SyliusThemeFactoryInterface;
 use Sylius\Bundle\ThemeBundle\Repository\ThemeRepositoryInterface;
 
-final class ThemesProvider implements ThemesProviderInterface
+final readonly class ThemesProvider implements ThemesProviderInterface
 {
-    private ThemeRepositoryInterface $themeRepository;
-
-    private SyliusThemeFactoryInterface $syliusThemeFactory;
-
-    private LocasticThemeFactoryInterface $locasticThemeFactory;
-
-    private string $baseDirectory;
-
     public function __construct(
-        ThemeRepositoryInterface $themeRepository,
-        SyliusThemeFactoryInterface $themeFactory,
-        LocasticThemeFactoryInterface $locasticThemeFactory,
-        string $baseDirectory
+        private ThemeRepositoryInterface $themeRepository,
+        private SyliusThemeFactoryInterface $syliusThemeFactory,
+        private LocasticThemeFactoryInterface $locasticThemeFactory,
     ) {
-        $this->themeRepository = $themeRepository;
-        $this->syliusThemeFactory = $themeFactory;
-        $this->locasticThemeFactory = $locasticThemeFactory;
-        $this->baseDirectory = $baseDirectory;
     }
 
     public function getAll(): array
     {
-        $themes = [self::NAME_DEFAULT => $this->getDefaultTheme()];
+        $mappedThemes = array_map(
+            fn ($t) => $this->locasticThemeFactory->createNew($t->getName(), $t->getPath()),
+            $this->themeRepository->findAll(),
+        );
 
-        return array_merge($themes, $this->themeRepository->findAll());
+        return array_merge([self::NAME_DEFAULT => $this->getDefaultTheme()], $mappedThemes);
     }
 
     public function findOneByName(string $name): ?ThemeInterface

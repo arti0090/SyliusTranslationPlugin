@@ -1,3 +1,2 @@
-locastic_sylius_translation_admin:
-    resource: "@LocasticSyliusTranslationPlugin/Resources/config/admin_routing.yml"
-    prefix: /admin
+locastic_sylius_translation:
+    resource: "@LocasticSyliusTranslationPlugin/Resources/config/routes.yaml"

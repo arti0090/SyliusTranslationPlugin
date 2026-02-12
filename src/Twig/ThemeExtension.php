@@ -10,17 +10,14 @@ use Twig\TwigFunction;
 
 final class ThemeExtension extends AbstractExtension
 {
-    private ThemesProviderInterface $themeProvider;
-
-    public function __construct(ThemesProviderInterface $themeProvider)
+    public function __construct(private readonly ThemesProviderInterface $themeProvider)
     {
-        $this->themeProvider = $themeProvider;
     }
 
-    public function getFunctions(): iterable
+    public function getFunctions(): array
     {
         return [
-            new TwigFunction('locastic_sylius_translation_get_themes', [$this->themeProvider, 'getAll'])
+            new TwigFunction('locastic_sylius_translation_get_themes', $this->themeProvider->getAll(...)),
         ];
     }
 }

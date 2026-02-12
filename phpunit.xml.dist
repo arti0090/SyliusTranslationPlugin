@@ -5,7 +5,7 @@
          colors="true"
          bootstrap="tests/Application/config/bootstrap.php">
     <testsuites>
-        <testsuite name="LocasticSyliusTranslationPlugin Test Suite">
+        <testsuite name="SyliusTranslationPlugin Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
@@ -13,7 +13,7 @@
     <php>
         <ini name="error_reporting" value="-1" />
 
-        <server name="KERNEL_CLASS_PATH" value="/tests/Application/AppKernel.php" />
+        <env name="KERNEL_CLASS" value="Tests\Locastic\SyliusTranslationPlugin\Application\Kernel" />
         <server name="IS_DOCTRINE_ORM_SUPPORTED" value="true" />
 
         <env name="APP_ENV" value="test"/>

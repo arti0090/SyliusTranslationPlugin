@@ -8,18 +8,17 @@ use Locastic\SymfonyTranslationBundle\Factory\TranslationMigrationFactoryInterfa
 use Locastic\SymfonyTranslationBundle\Model\TranslationMigrationInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 
-final class TranslationMigrationFactory implements FactoryInterface, TranslationMigrationFactoryInterface
+final readonly class TranslationMigrationFactory implements FactoryInterface, TranslationMigrationFactoryInterface
 {
-    private string $className;
-
-    public function __construct(
-        string $className,
-    ) {
-        $this->className = $className;
+    public function __construct(private string $className)
+    {
     }
 
     public function createNew(): TranslationMigrationInterface
     {
-        return new $this->className();
+        /** @var TranslationMigrationInterface $migration */
+        $migration = new $this->className();
+
+        return $migration;
     }
 }
