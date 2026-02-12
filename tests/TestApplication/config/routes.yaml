@@ -1,0 +1,2 @@
+sylius_translation_plugin:
+    resource: '@LocasticSyliusTranslationPlugin/config/routes.yaml'

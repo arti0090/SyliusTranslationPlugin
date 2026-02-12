@@ -1,0 +1,4 @@
+imports:
+    - { resource: '@LocasticSyliusTranslationPlugin/config/routes.yaml' }
+    - { resource: '@LocasticSyliusTranslationPlugin/config/routes.yaml' }
+    - { resource: '@LocasticSyliusTranslationPlugin/config/services.yaml' }

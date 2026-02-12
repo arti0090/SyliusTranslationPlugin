@@ -10,7 +10,7 @@
   "require": {
     "php": "^8.2",
     "sylius/sylius": "~1.14.0",
-    "locastic/symfony-translation-bundle": "^2.0"
+    "locastic/symfony-translation-bundle": "dev-main"
   },
   "require-dev": {
     "behat/behat": "^3.6.1",
@@ -38,6 +38,7 @@
     "robertfausk/behat-panther-extension": "^1.1",
     "sylius-labs/coding-standard": "^4.2",
     "sylius-labs/suite-tags-extension": "^0.2",
+    "sylius/test-application": "^1.14@alpha",
     "symfony/browser-kit": "^5.4 || ^6.4",
     "symfony/debug-bundle": "^5.4 || ^6.4",
     "symfony/dotenv": "^5.4 || ^6.4",
@@ -53,7 +54,8 @@
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": false,
       "phpstan/extension-installer": true,
-      "symfony/flex": true
+      "symfony/flex": true,
+      "symfony/runtime": true
     }
   },
   "extra": {
@@ -62,7 +64,8 @@
     },
     "symfony": {
       "require": "^6.4"
-    }
+    },
+    "public-dir": "vendor/sylius/test-application/public"
   },
   "autoload": {
     "psr-4": {
@@ -72,7 +75,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Locastic\\SymfonyTranslationBundle\\Tests\\": "tests/"
+      "Tests\\SyliusTranslationPlugin\\": "tests/TestApplication/src"
     },
     "classmap": [
       "tests/Application/Kernel.php"
@@ -101,6 +104,13 @@
     ]
   },
   "repositories": [
+    {
+      "type": "path",
+      "url": "../SymfonyTranslationBundle",
+      "options": {
+        "symlink": true
+      }
+    },
     {
       "type": "vcs",
       "url": "https://github.com/arti0090/SymfonyTranslationBundle"

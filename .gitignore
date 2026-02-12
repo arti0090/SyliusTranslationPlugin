@@ -23,3 +23,7 @@
 ###< friendsofphp/php-cs-fixer ###
 
 /.idea/
+
+/var/
+/tests/TestApplication/.env.local
+/tests/TestApplication/.env.*.local

@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
+namespace Tests\Locastic\SyliusTranslationPlugin;
+
+use Locastic\SyliusTranslationPlugin\MenuBuilder\AdminMenuListener;
 use Locastic\SyliusTranslationPlugin\Provider\ThemesProvider;
 use Locastic\SyliusTranslationPlugin\Provider\TranslationFilePathProvider;
 use Locastic\SymfonyTranslationBundle\Provider\ThemesProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Twig\TwigFunction;
-use Locastic\SyliusTranslationPlugin\MenuBuilder\AdminMenuListener;
 
 class PluginInitializationTest extends KernelTestCase
 {
@@ -54,7 +56,7 @@ class PluginInitializationTest extends KernelTestCase
 
         $isRegistered = false;
         foreach ($listeners as $listener) {
-            if (is_array($listener) && $listener[0] instanceof AdminMenuListener) {
+            if (\is_array($listener) && $listener[0] instanceof AdminMenuListener) {
                 $isRegistered = true;
                 break;
             }
