@@ -1,0 +1,37 @@
+{% set themes = locastic_sylius_translation_get_themes() %}
+<ul class="nav nav-tabs" id="tab-{{ loop.index }}" role="tablist">
+    {% for theme in themes %}
+        {% set targetId = 'tab-content-' ~ loop.parent.loop.index ~ '-' ~ loop.index %}
+        <li class="nav-item" role="presentation">
+            <button class="nav-link {% if loop.first %}active{% endif %}"
+                    data-bs-toggle="tab"
+                    data-bs-target="#{{ targetId }}"
+                    type="button" role="tab">
+                {{ theme.name }}
+            </button>
+        </li>
+    {% endfor %}
+</ul>
+
+<div class="tab-content p-3 border border-top-0">
+    {% for theme in themes %}
+        {% set targetId = 'tab-content-' ~ loop.parent.loop.index ~ '-' ~ loop.index %}
+        <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="{{ targetId }}" role="tabpanel">
+            <div class="row">
+                {% for translationValue in translation.valuesByTheme(theme.name) %}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">
+                            {{ translationValue.localeCode }}
+                        </label>
+                        <textarea
+                            id="translations_{{ translation.domainName }}_{{ translation.key }}_{{ translationValue.localeCode }}"
+                            name="translations{{ translationValue|locastic_symfony_translation_value_field_name }}"
+                            class="form-control js-translation-input"
+                            rows="4">{{- translationValue.value -}}
+                        </textarea>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>

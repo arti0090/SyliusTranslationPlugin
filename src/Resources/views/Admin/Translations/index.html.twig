@@ -1,117 +1,156 @@
-{% extends '@SyliusAdmin/layout.html.twig' %}
+{% extends '@SyliusAdmin/shared/layout/base.html.twig' %}
 
-{% import '@SyliusUi/Macro/pagination.html.twig' as pagination %}
-{% import '@SyliusUi/Macro/buttons.html.twig' as buttons %}
-{% import '@SyliusUi/Macro/messages.html.twig' as messages %}
-{% import '@SyliusUi/Macro/table.html.twig' as table %}
-{% import '@SyliusUi/Macro/flags.html.twig' as flags %}
-
-{% set event_prefix = 'locastic_sylius_translations' %}
-
-{% block content %}
-    <div class="ui stackable two column grid">
-        <div class="column">
-            {% include '@LocasticSyliusTranslationPlugin/Admin/Translations/Index/_headerTitle.html.twig' %}
-            {% include '@LocasticSyliusTranslationPlugin/Admin/Translations/Index/_breadcrumb.html.twig' %}
-
-            {{ sylius_template_event([event_prefix ~ '.header'], _context) }}
-        </div>
-        <div class="ui right aligned column">
-            <a class="ui button red" href="{{ path('locastic_sylius_translations_admin_clear_cache') }}">{{ 'locastic_sylius_translation.ui.clear_cache'|trans }}</a>
-        </div>
-    </div>
-
-    <div class="sylius-grid-wrapper">
-        <div class="ui hidden divider"></div>
-        {{ form_start(searchForm) }}
-        <div class="ui icon fluid input">
-            {{ form_widget(searchForm.search, {'attr': {'placeholder': searchForm.search.vars.label}}) }}
-            <i class="search icon"></i>
-        </div>
-        {{ form_end(searchForm) }}
-        <div class="ui hidden divider"></div>
-        <div class="sylius-grid-wrapper">
-            <div class="sylius-grid-nav">
-                <div class="sylius-grid-nav__pagination">
-                    {{ pagination.simple(translations) }}
-                </div>
-            </div>
-        </div>
-
-        {% if translations|length > 0 %}
-            <div class="ui segment spaceless sylius-grid-table-wrapper">
-                <div class="ui styled fluid accordion multiple">
-                    {% for translation in translations %}
-                        <div class="title">
-                            <div class="ui stackable grid">
-                                <div class="ui one wide column">
-                                    <i class="dropdown icon"></i>
-                                </div>
-                                <div class="ui three wide column">
-                                    <div class="ui blue label">{{ 'locastic_sylius_translation.ui.message_domain'|trans }}</div>
-                                    {{ translation.domainName }}
-                                </div>
-                                <div class="ui eight wide column">
-                                    <div class="ui black label">{{ 'locastic_sylius_translation.ui.message_id'|trans }}</div>
-                                    {{ translation.key }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="content ui form js-save-translations{% if searching %} active{% endif %}" data-url="{{ path('locastic_sylius_translation_admin_ajax_update') }}">
-                            <div class="ui equal width grid">
-                                {% set themes = locastic_sylius_translation_get_themes() %}
-                                <div class="ui top attached tabular menu">
-                                    {% for theme in themes %}
-                                        <a class="item{% if 0 == loop.index0 %} active{% endif %}" data-tab="{{ theme.name|replace({'/': '_'}) }}">
-                                            {{ theme.name }}
-                                        </a>
-                                    {% endfor %}
-                                </div>
-
-                                {% for theme in themes %}
-                                    <div class="ui bottom attached tab segment{% if 0 == loop.index0 %} active{% endif %} form js-save-translations"
-                                         data-url="{{ path('locastic_sylius_translation_admin_ajax_update') }}"
-                                         data-tab="{{ theme.name|replace({'/': '_'}) }}">
-                                        <div class="ui equal width grid">
-                                            {% for translationValue in translation.valuesByTheme(theme.name) %}
-                                                <div class="ui column">
-                                                    <div class="field">
-                                                        <label for="translations_{{ translation.domainName }}_{{ translation.key }}_{{ translationValue.localeCode }}">
-                                                            {{ flags.fromLocaleCode(translationValue.localeCode) }}
-                                                            <b>{{ translationValue.localeCode }}</b>
-                                                        </label>
-                                                        <textarea id="translations_{{ translation.domainName }}_{{ translation.key }}_{{ translationValue.localeCode }}"
-                                                                  name="translations{{ translationValue|locastic_symfony_translation_value_field_name }}"
-                                                                  rows="6" cols="45" class="ui input js-translation-input">
-                                                            {{- translationValue.value -}}
-                                                        </textarea>
-                                                    </div>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% else %}
-            {{ messages.info('sylius.ui.no_results_to_display') }}
-        {% endif %}
-        {{ pagination.simple(translations) }}
-    </div>
+{% block title %}
+    {{ 'locastic_sylius_translation.ui.translations'|trans }} {{ parent() }}
 {% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-
-    {{ sylius_template_event([event_prefix ~ '.stylesheets'], _context) }}
+{% block body %}
+    {% dump %}
+    {% hook 'locastic_sylius_translation_plugin.admin.translation.index' with _context %}
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
 
-    {{ sylius_template_event([event_prefix ~ '.javascripts'], _context) }}
-{% endblock %}
+
+
+{#{% extends '@SyliusAdmin/shared/layout/base.html.twig' %}#}
+
+{#{% block content %}#}
+{#    XD#}
+{#{% endblock %}#}
+
+{#{% block stylesheets %}#}
+{#    {{ parent() }}#}
+{#    {% hook 'index#stylesheets' %}#}
+{#{% endblock %}#}
+
+{#{% block javascripts %}#}
+{#    {{ parent() }}#}
+{#    {% hook 'index#javascripts' %}#}
+{#{% endblock %}#}
+
+{# --------------- #}
+
+{#{% block content %}#}
+{#    {% hook 'locastic_sylius_translations.admin.translation.index' %}#}
+{#{% endblock %}#}
+
+{# Zastąp makra UI nowymi odpowiednikami lub czystym HTML,#}
+{#   w Sylius 2.0 adminie często używa się komponentów Twig lub prostego HTML #}
+{#{% import '@SyliusUi/Macro/pagination.html.twig' as pagination %}#}
+{# UWAGA: pagination może wymagać podmiany na wersję Bootstrapową jeśli Sylius jej nie podmienił automagicznie #}
+
+{#{% set event_prefix = 'locastic_sylius_translations' %}#}
+
+{#{% block content %}#}
+{#    <div class="row mb-4">#}
+{#        <div class="col-md-6">#}
+{#            <h1 class="h3">#}
+{#                {% include '@LocasticSyliusTranslationPlugin/Admin/Translations/Index/_headerTitle.html.twig' %}#}
+{#            </h1>#}
+{#            <nav aria-label="breadcrumb">#}
+{#                {% include '@LocasticSyliusTranslationPlugin/Admin/Translations/Index/_breadcrumb.html.twig' %}#}
+{#            </nav>#}
+
+{#            {% hook 'locastic_sylius_translations.admin.translation.index.header' %}#}
+{#            {{ sylius_template_event([event_prefix ~ '.header'], _context) }}#}
+{#        </div>#}
+{#        <div class="col-md-6 text-end">#}
+{#            <a class="btn btn-danger" href="{{ path('locastic_sylius_translations_admin_clear_cache') }}">#}
+{#                <i class="bi bi-trash"></i>#}
+{#                {{ 'locastic_sylius_translation.ui.clear_cache'|trans }}#}
+{#            </a>#}
+{#        </div>#}
+{#    </div>#}
+
+{#    <div class="card">#}
+{#        <div class="card-body">#}
+{#            {{ form_start(searchForm) }}#}
+{#            <div class="input-group mb-3">#}
+{#                {{ form_widget(searchForm.search, {'attr': {'class': 'form-control', 'placeholder': searchForm.search.vars.label}}) }}#}
+{#                <button class="btn btn-outline-secondary" type="submit">#}
+{#                    <i class="search icon"></i>#}
+{#                </button>#}
+{#            </div>#}
+{#            {{ form_end(searchForm) }}#}
+
+{#            <div class="d-flex justify-content-center">#}
+{#                {{ pagination.simple(translations) }}#}
+{#            </div>#}
+
+{#            {% if translations|length > 0 %}#}
+{#                <div class="accordion" id="translationsAccordion">#}
+{#                    {% for translation in translations %}#}
+{#                        {% set collapseId = 'collapse-' ~ loop.index %}#}
+{#                        <div class="accordion-item">#}
+{#                            <h2 class="accordion-header" id="heading-{{ loop.index }}">#}
+{#                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ collapseId }}" aria-expanded="false" aria-controls="{{ collapseId }}">#}
+{#                                    <div class="row w-100">#}
+{#                                        <div class="col-md-3">#}
+{#                                            <span class="badge bg-primary">{{ 'locastic_sylius_translation.ui.message_domain'|trans }}</span>#}
+{#                                            {{ translation.domainName }}#}
+{#                                        </div>#}
+{#                                        <div class="col-md-8">#}
+{#                                            <span class="badge bg-dark">{{ 'locastic_sylius_translation.ui.message_id'|trans }}</span>#}
+{#                                            {{ translation.key }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </button>#}
+{#                            </h2>#}
+
+{#                            <div id="{{ collapseId }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ loop.index }}" data-bs-parent="#translationsAccordion">#}
+{#                                <div class="accordion-body js-save-translations" data-url="{{ path('locastic_sylius_translation_admin_ajax_update') }}">#}
+
+{#                                    {% set themes = locastic_sylius_translation_get_themes() %}#}
+{#                                    <ul class="nav nav-tabs" id="tab-{{ loop.index }}" role="tablist">#}
+{#                                        {% for theme in themes %}#}
+{#                                            {% set targetId = 'tab-content-' ~ loop.parent.loop.index ~ '-' ~ loop.index %}#}
+{#                                            <li class="nav-item" role="presentation">#}
+{#                                                <button class="nav-link {% if loop.first %}active{% endif %}"#}
+{#                                                        data-bs-toggle="tab"#}
+{#                                                        data-bs-target="#{{ targetId }}"#}
+{#                                                        type="button" role="tab">#}
+{#                                                    {{ theme.name }}#}
+{#                                                </button>#}
+{#                                            </li>#}
+{#                                        {% endfor %}#}
+{#                                    </ul>#}
+
+{#                                    <div class="tab-content p-3 border border-top-0">#}
+{#                                        {% for theme in themes %}#}
+{#                                            {% set targetId = 'tab-content-' ~ loop.parent.loop.index ~ '-' ~ loop.index %}#}
+{#                                            <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="{{ targetId }}" role="tabpanel">#}
+{#                                                <div class="row">#}
+{#                                                    {% for translationValue in translation.valuesByTheme(theme.name) %}#}
+{#                                                        <div class="col-md-6 mb-3">#}
+{#                                                            <label class="form-label fw-bold">#}
+{#                                                                {{ translationValue.localeCode }}#}
+{#                                                            </label>#}
+{#                                                            <textarea#}
+{#                                                                    id="translations_{{ translation.domainName }}_{{ translation.key }}_{{ translationValue.localeCode }}"#}
+{#                                                                    name="translations{{ translationValue|locastic_symfony_translation_value_field_name }}"#}
+{#                                                                    class="form-control js-translation-input"#}
+{#                                                                    rows="4">{{- translationValue.value -}}</textarea>#}
+{#                                                        </div>#}
+{#                                                    {% endfor %}#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        {% endfor %}#}
+{#                                    </div>#}
+
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    {% endfor %}#}
+{#                </div>#}
+{#            {% else %}#}
+{#                <div class="alert alert-info">#}
+{#                    {{ 'sylius.ui.no_results_to_display'|trans }}#}
+{#                </div>#}
+{#            {% endif %}#}
+
+{#            <div class="mt-4">#}
+{#                {{ pagination.simple(translations) }}#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}

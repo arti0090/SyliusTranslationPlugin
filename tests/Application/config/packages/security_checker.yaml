@@ -1,3 +1,0 @@
-services:
-    SensioLabs\Security\SecurityChecker:
-        public: false

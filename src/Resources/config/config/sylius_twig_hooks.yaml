@@ -1,0 +1,26 @@
+sylius_twig_hooks:
+    hooks:
+        'locastic_sylius_translation_plugin.admin.translation.index':
+            sidebar:
+                template: '@SyliusAdmin/shared/crud/common/sidebar.html.twig'
+                priority: 200
+            navbar:
+                template: '@SyliusAdmin/shared/crud/common/navbar.html.twig'
+                priority: 100
+            content:
+                template: '@LocasticSyliusTranslationPlugin/Admin/Translations/Index/_content_wrapper.html.twig'
+                priority: 0
+
+        'locastic_sylius_translation_plugin.admin.translation.index.content':
+            header:
+                template: '@LocasticSyliusTranslationPlugin/Admin/Translations/Index/_header.html.twig'
+                priority: 200
+            search:
+                template: '@LocasticSyliusTranslationPlugin/Admin/Translations/Index/_search.html.twig'
+                priority: 100
+            grid:
+                template: '@LocasticSyliusTranslationPlugin/Admin/Translations/Index/_grid.html.twig'
+                priority: 0
+
+
+
