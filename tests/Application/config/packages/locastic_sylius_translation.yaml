@@ -1,7 +1,0 @@
-imports:
-    - { resource: "@LocasticSyliusTranslationPlugin/Resources/config/config.yaml" }
-
-locastic_symfony_translation_bundle:
-    default_locale: en
-    locales:
-        - en

@@ -7,5 +7,6 @@ return [
     Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
     Sylius\Bundle\ResourceBundle\SyliusResourceBundle::class => ['all' => true],
     Locastic\SymfonyTranslationBundle\LocasticSymfonyTranslationBundle::class => ['all' => true],
+    Sylius\TwigHooks\SyliusTwigHooksBundle::class => ['all' => true],
     Locastic\SyliusTranslationPlugin\LocasticSyliusTranslationPlugin::class => ['all' => true],
 ];

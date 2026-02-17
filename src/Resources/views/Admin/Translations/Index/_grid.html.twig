@@ -1,0 +1,82 @@
+{% import '@SyliusAdmin/shared/helper/pagination.html.twig' as pagination %}
+{% set context = get_hookable_context() %}
+{% set translations = context.translations %}
+
+<div class="d-flex justify-content-center mb-3">
+    {{ pagination.simple(translations) }}
+</div>
+
+{% if translations|length > 0 %}
+    <div class="accordion" id="translationsAccordion">
+        {% for translation in translations %}
+            {% set collapseId = 'collapse-' ~ loop.index %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading-{{ loop.index }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ collapseId }}" aria-expanded="false" aria-controls="{{ collapseId }}">
+                        <div class="d-flex w-100 align-items-center gap-3 row">
+                            <span class="badge bg-blue text-bg-primary col-1">
+                                {{ 'locastic_sylius_translation.ui.message_domain'|trans }}
+                            </span>
+                            <div class="col-2">{{ translation.domainName }}</div>
+
+                            <span class="badge text-bg-dark col-1">{{ 'locastic_sylius_translation.ui.message_id'|trans }}</span>
+                            <span class="fw-bold text-break col-5">{{ translation.key }}</span>
+                        </div>
+                    </button>
+                </h2>
+
+                <div id="{{ collapseId }}" class="accordion-collapse collapse" aria-labelledby="heading-{{ loop.index }}" data-bs-parent="#translationsAccordion">
+                    <div class="accordion-body js-save-translations" data-url="{{ path('locastic_sylius_translation_admin_ajax_update') }}">
+
+                        {% set themes = locastic_sylius_translation_get_themes() %}
+                        <ul class="nav nav-tabs mb-3" id="tab-{{ loop.index }}" role="tablist">
+                            {% for theme in themes %}
+                                {% set targetId = 'tab-content-' ~ loop.parent.loop.index ~ '-' ~ loop.index %}
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link {% if loop.first %}active{% endif %}"
+                                            data-bs-toggle="tab"
+                                            data-bs-target="#{{ targetId }}"
+                                            type="button" role="tab">
+                                        {{ theme.name }}
+                                    </button>
+                                </li>
+                            {% endfor %}
+                        </ul>
+
+                        <div class="tab-content">
+                            {% for theme in themes %}
+                                {% set targetId = 'tab-content-' ~ loop.parent.loop.index ~ '-' ~ loop.index %}
+                                <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="{{ targetId }}" role="tabpanel">
+                                    <div class="row g-3">
+                                        {% for translationValue in translation.valuesByTheme(theme.name) %}
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold">
+                                                    {{ translationValue.localeCode }}
+                                                </label>
+                                                <textarea
+                                                    id="translations_{{ translation.domainName }}_{{ translation.key }}_{{ translationValue.localeCode }}"
+                                                    name="translations{{ translationValue|locastic_symfony_translation_value_field_name }}"
+                                                    class="form-control js-translation-input"
+                                                    rows="3"
+                                                >{{- translationValue.value -}}</textarea>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        {{ 'sylius.ui.no_results_to_display'|trans }}
+    </div>
+{% endif %}
+
+<div class="mt-4 d-flex justify-content-center">
+    {{ pagination.simple(translations) }}
+</div>
