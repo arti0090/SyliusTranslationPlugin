@@ -105,13 +105,6 @@
   },
   "repositories": [
     {
-      "type": "path",
-      "url": "../SymfonyTranslationBundle",
-      "options": {
-        "symlink": true
-      }
-    },
-    {
       "type": "vcs",
       "url": "https://github.com/arti0090/SymfonyTranslationBundle"
     }
